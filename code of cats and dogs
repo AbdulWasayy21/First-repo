@@ -112,3 +112,47 @@ labels.append(0) else:
 labels.append(1)
 
 # Append the HOG image to the hog_images list
+hog_images.append(hog_image)
+return np.array(features), np.array(labels), hog_images # Extract features and labels from the training directory
+train_features, train_labels, train_hog_images = extract_features(train_dir)
+
+# Extract features and labels from the testing directory
+test_features, test_labels, test_hog_images = extract_features(test_dir)
+return train_features, train_labels, test_features, test_labels, train_hog_images, test_hog_images # Extract features and split data into training and testing sets for cats
+cat_train_features, cat_train_labels, cat_test_features, cat_test_labels, cat_train_hog_images,
+cat_test_hog_images = extract_features_with_split(cats_train_dir, cats_test_dir)
+
+# Extract features and split data into training and testing sets for dogs
+dog_train_features, dog_train_labels, dog_test_features, dog_test_labels, dog_train_hog_images, dog_test_hog_images = extract_features_with_split(dogs_train_dir, dogs_test_dir)
+
+# Function to display HOG images
+def display_hog_images(hog_images, label):
+fig, axes = plt.subplots(1, len(hog_images), figsize=(15, 6)) fig.suptitle(f"HOG {label} Images", fontsize=16)
+
+for i, ax in enumerate(axes): ax.imshow(hog_images[i], cmap='gray') ax.axis('off')
+
+plt.show()
+
+# Print HOG images for cats display_hog_images(cat_train_hog_images[:5], 'Cat Train') display_hog_images(cat_test_hog_images[:5], 'Cat Test')
+
+# Print HOG images for dogs display_hog_images(dog_train_hog_images[:5], 'Dog Train') display_hog_images(dog_test_hog_images[:5], 'Dog Test')
+
+# Define Euclidean and Manhattan distance functions def euclidean_distance(x1, x2):
+return np.sqrt(np.sum((x1 - x2) ** 2))
+
+def manhattan_distance(x1, x2):
+return np.sum(np.abs(x1 - x2))
+
+# Function to perform k-NN classification
+def k_nearest_neighbors(X_train, y_train, X_test, k, distance_metric='euclidean'): distances = []
+
+# Calculate distances between test point and all training points for i in range(len(X_train)):
+if distance_metric == 'euclidean':
+dist = euclidean_distance(X_train[i], X_test) elif distance_metric == 'manhattan':
+dist = manhattan_distance(X_train[i], X_test) distances.append((dist, y_train[i]))
+
+# Sort distances in ascending order distances = sorted(distances)
+
+# Choose k nearest neighbors k_nearest = distances[:k]
+
+# Get the most frequent class among the k nearest neighbors nearest_labels = [label for (_, label) in k_nearest] most_common_label = Counter(nearest_labels).most_common(1)[0]
