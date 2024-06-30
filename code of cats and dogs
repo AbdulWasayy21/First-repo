@@ -72,3 +72,43 @@ img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 # Load the image
 test_files = os.listdir(test_dir)
 img_path = os.path.join(test_dir, test_files[i]) img = cv2.imread(img_path)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Display the image ax.imshow(img) ax.axis('off')
+
+plt.show()
+
+# Define directories for cats
+cats_train_dir = '/content/dataset/cats_train' cats_test_dir = '/content/dataset/cats_test'
+
+# Define directories for dogs
+dogs_train_dir = '/content/dataset/dogs_train' dogs_test_dir = '/content/dataset/dogs_test'
+
+# Display sample cat images with train and test splits display_sample_images_with_split(cats_train_dir, cats_test_dir, 'Cat')
+
+# Display sample dog images with train and test splits display_sample_images_with_split(dogs_train_dir, dogs_test_dir, 'Dog')
+
+# Function to extract HOG features and split data into training and testing sets def extract_features_with_split(train_dir, test_dir):
+# Function to extract HOG features from a directory def extract_features(directory):
+features = [] labels = [] hog_images = []
+
+# Iterate over each image file in the directory for filename in os.listdir(directory):
+img_path = os.path.join(directory, filename)
+
+# Read the image
+img = cv2.imread(img_path)
+
+# Check if the image is successfully read if img is not None:
+# Resize the image to (128, 128) for consistency img_resized = cv2.resize(img, (128, 128))
+
+# Extract HOG features and HOG image
+hog_features, hog_image = hog(img_resized, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(2, 2), block_norm='L2-Hys',
+visualize=True, multichannel=True, channel_axis=-1)
+
+# Append the HOG features to the features list features.append(hog_features)
+
+# Append the label (0 for cats, 1 for dogs) if 'cat' in directory:
+labels.append(0) else:
+labels.append(1)
+
+# Append the HOG image to the hog_images list
