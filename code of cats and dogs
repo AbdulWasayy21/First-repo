@@ -79,6 +79,7 @@ img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 plt.show()
 
 # Define directories for cats
+
 cats_train_dir = '/content/dataset/cats_train' cats_test_dir = '/content/dataset/cats_test'
 
 # Define directories for dogs
