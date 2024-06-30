@@ -1,0 +1,35 @@
+from google.colab import drive import zipfile
+import os import shutil import random import math
+import matplotlib.pyplot as plt import cv2
+import numpy as np
+from skimage.feature import hog from collections import Counter
+
+# Mount Google Drive drive.mount('/content/drive')
+
+# Path to the zip file in Google Drive
+zip_file_path = '/content/drive/My Drive/kagglecatsanddogs_5340 (2).zip'
+
+# Destination directory to extract the zip file extract_dir = '/content/dataset'
+
+# Create the destination directory if it doesn't exist os.makedirs(extract_dir, exist_ok=True)
+
+# Extract the zip file
+with zipfile.ZipFile(zip_file_path, 'r') as zip_ref: zip_ref.extractall(extract_dir)
+
+# Path to the extracted "PetImages" directory pet_images_dir = os.path.join(extract_dir, 'PetImages')
+
+# Create separate directories for cats and dogs cats_dir = os.path.join(extract_dir, 'cats') dogs_dir = os.path.join(extract_dir, 'dogs') os.makedirs(cats_dir, exist_ok=True) os.makedirs(dogs_dir, exist_ok=True)
+
+# Move cat images to the cats directory and dog images to the dogs directory for root, dirs, files in os.walk(pet_images_dir):
+for file in files:
+if file.endswith('.jpg'):
+if 'Cat' in root:
+shutil.move(os.path.join(root, file), os.path.join(cats_dir, file)) elif 'Dog' in root:
+shutil.move(os.path.join(root, file), os.path.join(dogs_dir, file))
+
+# List the number of cat and dog images num_cats = len(os.listdir(cats_dir)) num_dogs = len(os.listdir(dogs_dir))
+
+print(f"Number of cat images: {num_cats}") print(f"Number of dog images: {num_dogs}")
+
+# Define the percentage split train_percentage = 0.8
+Test percentage = 0.2
